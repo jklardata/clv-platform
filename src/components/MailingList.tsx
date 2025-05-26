@@ -25,7 +25,8 @@ const MailingList = () => {
       setStatus('success');
       setMessage('Thank you for subscribing!');
       setEmail('');
-    } catch (error) {
+    } catch (err) {
+      console.error('Subscription error:', err);
       setStatus('error');
       setMessage('Something went wrong. Please try again.');
     }
