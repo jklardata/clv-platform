@@ -20,15 +20,19 @@ const MailingList = () => {
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) throw new Error('Subscription failed');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Subscription failed');
+      }
       
       setStatus('success');
-      setMessage('Thank you for subscribing!');
+      setMessage(data.message || 'Thank you for subscribing!');
       setEmail('');
-    } catch (err) {
-      console.error('Subscription error:', err);
+    } catch (err: any) {
+      console.error('Form submission error:', err);
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
+      setMessage(err.message || 'Something went wrong. Please try again.');
     }
   };
 
