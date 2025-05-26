@@ -12,6 +12,7 @@ const MailingList = () => {
     setStatus('loading');
     
     try {
+      console.log('Submitting email:', email);
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
@@ -21,18 +22,23 @@ const MailingList = () => {
       });
 
       const data = await response.json();
+      console.log('API Response:', { status: response.status, data });
       
       if (!response.ok) {
-        throw new Error(data.error || 'Subscription failed');
+        throw new Error(data.error || `API Error: ${response.status} - ${JSON.stringify(data)}`);
       }
       
       setStatus('success');
       setMessage(data.message || 'Thank you for subscribing!');
       setEmail('');
     } catch (err: any) {
-      console.error('Form submission error:', err);
+      console.error('Form submission error:', {
+        message: err.message,
+        stack: err.stack,
+        error: err
+      });
       setStatus('error');
-      setMessage(err.message || 'Something went wrong. Please try again.');
+      setMessage(`Error: ${err.message || 'Something went wrong. Please try again.'}`);
     }
   };
 
